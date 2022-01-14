@@ -11,5 +11,8 @@
   "license": "MIT",
   "jest": {
     "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7"
   }
 }
