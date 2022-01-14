@@ -1,0 +1,15 @@
+{
+  "name": "grain-chain-test",
+  "version": "1.0.0",
+  "description": "Technical test",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --verbose"
+  },
+  "author": "Randy Gala",
+  "license": "MIT",
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
