@@ -1,42 +1,58 @@
 const textToMatrix = (text = '') => text.split('\r\n').map(row => row.split('').map(item => Number(item)))
 
-const replaceWithRoutes = (array, index, prev, next) => {
-    for (let i = 0; i < array.length; i++) {
-        if(i >= index - prev && i <= index + next) {
-            array[i] = 1
+const replaceWithRoutes = (matrix, route) => {
+    for (let y = 0; y < matrix.length; y++) {
+        for (let x = 0; x < matrix[y].length; x++) {
+                const resultX = createRoute(matrix[y], x)
+                const resultY = createRoute(matrix.map(item => item[x]), y)
+                if (resultX && resultY) {
+                    const inRouteX = x >= route.x.index - route.x.prev && x <= route.x.index + route.x.next
+                    const inRouteY = y >= route.y.index - route.y.prev && y <= route.y.index + route.y.next
+                    if (inRouteX && y === route.y.index) {
+                        matrix[y][x] = 1
+                        console.table(matrix)
+                    }
+                    if (inRouteY && x === route.x.index) {
+                        matrix[y][x] = 1
+                        console.table(matrix)
+                    }
+                }
+            }
         }
-    }
-    return array
+    return matrix
 }
 
-const toRoutes = (matrix) => {
+const maxRoute = (matrix) => {
     let result = []
     for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++){
-            const resultX = maxRoute(matrix[y], x)
-            const resultY = maxRoute(matrix.map( item => item[x]), y)
-            if(resultX && resultY) result.push({
-                x: {
-                    ...resultX,
-                    index: x
-                },
-                y: {
-                    ...resultY,
-                    index: y
-                },
-                total: resultX.total + resultY.total
-            })
+        for (let x = 0; x < matrix[y].length; x++) {
+            const resultX = createRoute(matrix[y], x)
+            const resultY = createRoute(matrix.map(item => item[x]), y)
+            if (resultX && resultY) {
+                const route = {
+                    x: {
+                        ...resultX,
+                        index: x
+                    },
+                    y: {
+                        ...resultY,
+                        index: y
+                    },
+                    total: resultX.total + resultY.total
+                }
+                result.push(route)
+            }
         }
     }
-    result = result.sort((a, b)=> {
-        if(a.total < b.total) return 1
-        if(a.total > b.total) return -1
+    result = result.sort((a, b) => {
+        if (a.total < b.total) return 1
+        if (a.total > b.total) return -1
         return 0
     })
-    return result
+    return result[0]
 }
 
-const maxRoute = (array, init = 0) => {
+const createRoute = (array, init = 0) => {
     const next = countRightZeros(array, init)
     const prev = countLeftZeros(array, init)
     if (prev === -1 && next === -1) return null
@@ -71,6 +87,6 @@ module.exports = {
     countLeftZeros,
     countRightZeros,
     maxRoute,
-    toRoutes,
+    maxRoute,
     replaceWithRoutes
 }
