@@ -4,6 +4,8 @@ const path = require('path');
 const { textToMatrix, replaceWithRoutes, maxRoute } = require('./utils');
 
 
+const countZeros = (matrix) => matrix.flat().filter(item => item === 0).length
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -16,11 +18,27 @@ document = fs.readFileSync(path.resolve("/Users/randygala/develop/personal/inter
 // });
 
 const matrix = textToMatrix(document)
-while(matrix.flat().filter(item => item === 0).length){
-    let route = maxRoute(matrix)
-    let routed = replaceWithRoutes(matrix, route)
-    console.log(route)
+let routed = matrix
+const t0 = performance.now();
+
+while(countZeros(routed)){
+    let routes = maxRoute(routed)
+    let route = routes[0]
+    if(routes.length > 1) {
+        let max = countZeros(routed)
+        routes.forEach(r => {
+            let filledMatrix = replaceWithRoutes(routed, r)
+            if( countZeros(filledMatrix) > max){
+                route = r
+            }
+        })
+    }
+    console.log({route})
+    routed = replaceWithRoutes(routed, route)
+    console.table(routed)
 }
+const t1 = performance.now();
+console.log(`${t1 - t0} milliseconds.`);
 
 
 

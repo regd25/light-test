@@ -1,25 +1,30 @@
 const textToMatrix = (text = '') => text.split('\r\n').map(row => row.split('').map(item => Number(item)))
 
+
+
 const replaceWithRoutes = (matrix, route) => {
+    const m = JSON.parse(JSON.stringify(matrix))
+    
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
-                const resultX = createRoute(matrix[y], x)
-                const resultY = createRoute(matrix.map(item => item[x]), y)
+                const resultX = createRoute(m[y], x)
+                const resultY = createRoute(m.map(item => item[x]), y)
+
                 if (resultX && resultY) {
                     const inRouteX = x >= route.x.index - route.x.prev && x <= route.x.index + route.x.next
                     const inRouteY = y >= route.y.index - route.y.prev && y <= route.y.index + route.y.next
                     if (inRouteX && y === route.y.index) {
-                        matrix[y][x] = 1
-                        console.table(matrix)
+                        m[y][x] = 1
+                        // console.table(m)
                     }
                     if (inRouteY && x === route.x.index) {
-                        matrix[y][x] = 1
-                        console.table(matrix)
+                        m[y][x] = 1
+                        // console.table(m)
                     }
                 }
             }
         }
-    return matrix
+    return m
 }
 
 const maxRoute = (matrix) => {
@@ -49,7 +54,7 @@ const maxRoute = (matrix) => {
         if (a.total > b.total) return -1
         return 0
     })
-    return result[0]
+    return result.filter(item => item.total === result[0].total)
 }
 
 const createRoute = (array, init = 0) => {
