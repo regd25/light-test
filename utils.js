@@ -4,26 +4,26 @@ const textToMatrix = (text = '') => text.split('\r\n').map(row => row.split('').
 
 const replaceWithRoutes = (matrix, route) => {
     const m = JSON.parse(JSON.stringify(matrix))
-    
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-                const resultX = createRoute(m[y], x)
-                const resultY = createRoute(m.map(item => item[x]), y)
 
-                if (resultX && resultY) {
-                    const inRouteX = x >= route.x.index - route.x.prev && x <= route.x.index + route.x.next
-                    const inRouteY = y >= route.y.index - route.y.prev && y <= route.y.index + route.y.next
-                    if (inRouteX && y === route.y.index) {
-                        m[y][x] = 1
-                        // console.table(m)
-                    }
-                    if (inRouteY && x === route.x.index) {
-                        m[y][x] = 1
-                        // console.table(m)
-                    }
-                }
-            }
+    for (let x = route.x.index - route.x.prev; x <= route.x.index + route.x.next; x++) {
+        const value = matrix[route.y.index][x];
+        if(x === route.x.index) {
+            m[route.y.index][x] = '*'
         }
+        if(value === 0 || value === '-') {
+            m[route.y.index][x] = '-'
+        }
+    }
+
+    for (let y = route.y.index - route.y.prev; y <= route.y.index + route.y.next; y++) {
+        const value = matrix[y][route.x.index];
+        if(value === 0 || value === '-') {
+            m[y][route.x.index] = '|'
+        }
+        if(y === route.y.index) {
+            m[y][route.x.index] = '*'
+        }
+    }
     return m
 }
 
@@ -49,7 +49,7 @@ const maxRoute = (matrix) => {
             }
         }
     }
-    result = result.sort((a, b) => {
+    return result.sort((a, b) => {
         if (a.total < b.total) return 1
         if (a.total > b.total) return -1
         return 0
