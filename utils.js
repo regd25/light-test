@@ -8,7 +8,7 @@ const replaceWithRoutes = (matrix, route) => {
     for (let x = route.x.index - route.x.prev; x <= route.x.index + route.x.next; x++) {
         const value = matrix[route.y.index][x];
         if(x === route.x.index) {
-            m[route.y.index][x] = '*'
+            m[route.y.index][x] = 'O'
         }
         if(value === 0 || value === '-') {
             m[route.y.index][x] = '-'
@@ -21,7 +21,7 @@ const replaceWithRoutes = (matrix, route) => {
             m[y][route.x.index] = '|'
         }
         if(y === route.y.index) {
-            m[y][route.x.index] = '*'
+            m[y][route.x.index] = 'O'
         }
     }
     return m
@@ -54,7 +54,6 @@ const maxRoute = (matrix) => {
         if (a.total > b.total) return -1
         return 0
     })
-    return result.filter(item => item.total === result[0].total)
 }
 
 const createRoute = (array, init = 0) => {
@@ -91,7 +90,7 @@ module.exports = {
     textToMatrix,
     countLeftZeros,
     countRightZeros,
-    maxRoute,
+    createRoute,
     maxRoute,
     replaceWithRoutes
 }
